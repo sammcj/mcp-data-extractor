@@ -2,6 +2,10 @@
 
 A Model Context Protocol server that extracts embedded data (such as i18n translations or key/value configurations) from TypeScript/JavaScript source code into structured JSON configuration files.
 
+[![smithery badge](https://smithery.ai/badge/mcp-data-extractor)](https://smithery.ai/server/mcp-data-extractor)
+
+<a href="https://glama.ai/mcp/servers/40c3iyazm5"><img width="380" height="200" src="https://glama.ai/mcp/servers/40c3iyazm5/badge" alt="MCP Data Extractor MCP server" /></a>
+
 ## Features
 
 - Data Extraction:
