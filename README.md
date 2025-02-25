@@ -14,14 +14,14 @@ A Model Context Protocol server that extracts embedded data (such as i18n transl
   - Supports nested object structures and arrays
   - Maintains hierarchical key structure using dot notation
   - Handles both TypeScript and JavaScript files with JSX support
-  - Replaces source file content with "MIGRATED_TO_JSON" after successful extraction (configurable)
+  - Replaces source file content with "MIGRATED TO <target path>" after successful extraction (configurable)
 
 - SVG Extraction:
   - Extracts SVG components from React/TypeScript/JavaScript files
   - Preserves SVG structure and attributes
   - Removes React-specific code and props
   - Creates individual .svg files named after their component
-  - Replaces source file content with "MIGRATED_TO_SVG" after successful extraction (configurable)
+  - Replaces source file content with "MIGRATED TO <target directory>" after successful extraction (configurable)
 
 ## Usage
 
@@ -87,10 +87,10 @@ Use `extract_svg` to extract SVG components into individual files:
 ### Source File Replacement
 
 By default, after successful extraction, the server will replace the content of the source file with:
-- "MIGRATED_TO_JSON" for data extraction
-- "MIGRATED_TO_SVG" for SVG extraction
+- "MIGRATED TO <target path>" for data extraction
+- "MIGRATED TO <target directory>" for SVG extraction
 
-This helps track which files have already been processed and prevents duplicate extraction.
+This helps track which files have already been processed and prevents duplicate extraction. It also makes it easy for LLMs and developers to see where the extracted data now lives when they encounter the source file later.
 
 To disable this behavior, set the `DISABLE_SOURCE_REPLACEMENT` environment variable to `true` in your MCP configuration:
 
