@@ -14,14 +14,14 @@ A Model Context Protocol server that extracts embedded data (such as i18n transl
   - Supports nested object structures and arrays
   - Maintains hierarchical key structure using dot notation
   - Handles both TypeScript and JavaScript files with JSX support
-  - Replaces source file content with "MIGRATED TO <target path>" after successful extraction (configurable)
+  - Replaces source file content with "MIGRATED TO <target absolute path>" after successful extraction (configurable)
 
 - SVG Extraction:
   - Extracts SVG components from React/TypeScript/JavaScript files
   - Preserves SVG structure and attributes
   - Removes React-specific code and props
   - Creates individual .svg files named after their component
-  - Replaces source file content with "MIGRATED TO <target directory>" after successful extraction (configurable)
+  - Replaces source file content with "MIGRATED TO <target absolute path>" after successful extraction (configurable)
 
 ## Usage
 
