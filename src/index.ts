@@ -47,7 +47,8 @@ class DataMigratorServer {
 
     this.setupToolHandlers();
 
-    this.server.onerror = (error) => console.error('[MCP Error]', error);
+    // Error handling without stdout logging
+    this.server.onerror = (error) => { /* Errors handled by MCP protocol */ };
     process.on('SIGINT', async () => {
       await this.server.close();
       process.exit(0);
@@ -345,9 +346,12 @@ class DataMigratorServer {
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('Data Migrator MCP server running on stdio');
+    // Removed stdout logging that breaks JSON-RPC protocol
   }
 }
 
 const server = new DataMigratorServer();
-server.run().catch(console.error);
+server.run().catch(error => {
+  // Handle errors without logging to stdout/stderr
+  process.exit(1);
+});
