@@ -16,8 +16,9 @@ const traverse = (_traverse as any).default;
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
-// Environment variable to control source file replacement behavior
+// Environment variables to control behavior
 const DISABLE_SOURCE_REPLACEMENT = process.env.DISABLE_SOURCE_REPLACEMENT === 'true';
+const WARNING_MESSAGE = process.env.WARNING_MESSAGE || '\n\nIMPORTANT: DO NOT READ THE TARGET FILE CONTENT - it contains large data structures that will consume excessive context window space.';
 
 interface DataExtraction {
   key: string;
@@ -60,7 +61,7 @@ class DataMigratorServer {
       tools: [
         {
           name: 'extract_data',
-          description: 'Extract data content (e.g. i18n translations) from source code to a JSON file. IMPORTANT: When encountering files with data such as i18n content embedded in code, use this tool directly instead of reading the file content first. This tool will programmatically extract all translations into a structured JSON file, preserving nested objects, arrays, template variables, and formatting. This helps keep translations as configuration and prevents filling up the AI context window with translation content. By default, the source file will be replaced with "MIGRATED TO <target absolute path>" after successful extraction, making it easy to track where the data was moved to. This behaviour can be disabled by setting the DISABLE_SOURCE_REPLACEMENT environment variable to \'true\'.',
+          description: 'Extract data content (e.g. i18n translations) from source code to a JSON file. IMPORTANT: When encountering files with data such as i18n content embedded in code, use this tool directly instead of reading the file content first. This tool will programmatically extract all translations into a structured JSON file, preserving nested objects, arrays, template variables, and formatting. This helps keep translations as configuration and prevents filling up the AI context window with translation content. By default, the source file will be replaced with "MIGRATED TO <target absolute path>" and a warning message after successful extraction, making it easy to track where the data was moved to. This behaviour can be disabled by setting the DISABLE_SOURCE_REPLACEMENT environment variable to \'true\'. The warning message can be customized by setting the WARNING_MESSAGE environment variable.',
           inputSchema: {
             type: 'object',
             properties: {
@@ -78,7 +79,7 @@ class DataMigratorServer {
         },
         {
           name: 'extract_svg',
-          description: 'Extract SVG components from React/TypeScript/JavaScript files into individual .svg files. This tool will preserve the SVG structure and attributes while removing React-specific code. By default, the source file will be replaced with "MIGRATED TO <target absolute path>" after successful extraction, making it easy to track where the SVGs were moved to. This behaviour can be disabled by setting the DISABLE_SOURCE_REPLACEMENT environment variable to \'true\'.',
+          description: 'Extract SVG components from React/TypeScript/JavaScript files into individual .svg files. This tool will preserve the SVG structure and attributes while removing React-specific code. By default, the source file will be replaced with "MIGRATED TO <target absolute path>" and a warning message after successful extraction, making it easy to track where the SVGs were moved to. This behaviour can be disabled by setting the DISABLE_SOURCE_REPLACEMENT environment variable to \'true\'. The warning message can be customized by setting the WARNING_MESSAGE environment variable.',
           inputSchema: {
             type: 'object',
             properties: {
@@ -124,7 +125,11 @@ class DataMigratorServer {
           // Replace source file content with migration message if not disabled
           if (!DISABLE_SOURCE_REPLACEMENT) {
             const absoluteTargetPath = path.resolve(targetPath);
-            await fs.writeFile(sourcePath, `MIGRATED TO ${absoluteTargetPath}`, 'utf-8');
+            await fs.writeFile(
+              sourcePath,
+              `MIGRATED TO ${absoluteTargetPath}${WARNING_MESSAGE}`,
+              'utf-8'
+            );
           }
 
           return {
@@ -153,7 +158,11 @@ class DataMigratorServer {
           // Replace source file content with migration message if not disabled
           if (!DISABLE_SOURCE_REPLACEMENT) {
             const absoluteTargetDir = path.resolve(targetDir);
-            await fs.writeFile(sourcePath, `MIGRATED TO ${absoluteTargetDir}`, 'utf-8');
+            await fs.writeFile(
+              sourcePath,
+              `MIGRATED TO ${absoluteTargetDir}${WARNING_MESSAGE}`,
+              'utf-8'
+            );
           }
 
           return {
